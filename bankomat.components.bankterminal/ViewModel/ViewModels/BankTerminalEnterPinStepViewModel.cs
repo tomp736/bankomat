@@ -33,7 +33,7 @@ namespace bankomat.components.bankterminal
                 response.ErrorMessage = submitPinResponse.message;
                 if(submitPinResponse.nextStepId != Guid.Empty)
                 {
-                    response.NextStep = BankTerminalStep.ExitStepId;
+                    response.NextStep = submitPinResponse.nextStepId;
                 }
             }
             return await Task.FromResult(response);
