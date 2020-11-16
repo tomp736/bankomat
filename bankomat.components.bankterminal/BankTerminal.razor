@@ -1,0 +1,18 @@
+﻿@inherits BankTerminalBase
+
+<div class="bank-terminal">
+    <div class="bank-terminal-view">    
+        <TerminalScreen @ref="terminalScreen" Title="@bankTerminalStepViewModel.Title" Content="@bankTerminalStepViewModel.Content"></TerminalScreen>
+        <KeyPad @ref="keyPad" KeyPadMode="@bankTerminalStepViewModel.KeyPadMode" OnKeyPadEntry="OnKeyPadEntry"></KeyPad>
+        <Alert @ref="alert" />
+    </div>
+</div>
+
+<nav class="navbar navbar-light bg-light">
+    <span class="navbar-text">
+        TimeLeft: @timeLeft.Seconds
+    </span> 
+    <span class="navbar-text">
+        SessionId: @bankTerminalSession.SessionId
+    </span> 
+</nav>

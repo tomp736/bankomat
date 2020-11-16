@@ -1,0 +1,23 @@
+@inject ILoggerService loggerService;
+
+@if(Visible)
+{
+    <div class="@AlertType.AlertClass()" role="alert">
+        @Message
+    </div>
+}
+
+@code
+{
+    public bool Visible { get; set; }
+    public AlertType AlertType { get; set; }
+    public string Message { get; set; }
+    
+    public void ShowAlert(AlertType alertType, string message)
+    {
+        Visible = true;
+        AlertType = alertType;
+        Message = message;
+        StateHasChanged();
+    }
+} 

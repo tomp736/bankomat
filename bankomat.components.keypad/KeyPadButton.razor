@@ -1,0 +1,23 @@
+@inject ILoggerService loggerService;
+
+<button type="button" @onclick="(e => ItemClick(KeyPadEntry))">
+    @ChildContent
+</button>
+
+@code
+{
+    [Parameter]
+    public KeyPadEntry KeyPadEntry { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public EventCallback<KeyPadEntry> OnButtonClick { get; set; }
+
+    public async Task ItemClick(KeyPadEntry keyPadEntry)
+    {
+        loggerService.WriteConsole(keyPadEntry.ToString() + " clicked");
+        await OnButtonClick.InvokeAsync(keyPadEntry);
+    }
+}
