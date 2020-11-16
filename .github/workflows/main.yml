@@ -26,6 +26,10 @@ jobs:
       - name: Publish .NET Core Project
         run: dotnet publish bankomat.blazorclient -c Release -o release --nologo
       
+      # changes the base-tag in index.html from '/' to 'bankomat' to match GitHub Pages repository subdirectory
+      - name: Change base-tag in index.html from / to bankomat
+        run: sed -i 's/<base href="\/" \/>/<base href="\/bankomat\/" \/>/g' release/wwwroot/index.html
+      
       # commit to GitHub Pages
       - name: Commit wwwroot to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@3.5.9
