@@ -12,6 +12,7 @@ namespace bankomat.components.bankterminal
             Title = "Print Receipt?";
             Content = "";
             KeyPadMode = KeyPadMode.YesNo;
+            KeyPadMaxChars = 10;
             TimeOut = 10;
             TimeOutStep = BankTerminalStep.ExitStepId;
         }

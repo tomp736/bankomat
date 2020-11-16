@@ -13,6 +13,7 @@ namespace bankomat.components.bankterminal
             Title = "Goodbye";
             Content = "";
             KeyPadMode = KeyPadMode.YesNo;
+            KeyPadMaxChars = 10;
             TimeOut = 3;
             TimeOutStep = BankTerminalStep.WelcomeStepId;
         }   

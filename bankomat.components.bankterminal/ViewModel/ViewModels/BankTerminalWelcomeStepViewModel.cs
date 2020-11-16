@@ -12,6 +12,7 @@ namespace bankomat.components.bankterminal
             Title = "Welcome";
             Content = "Press right arrow to continue";
             KeyPadMode = KeyPadMode.YesNo;    
+            KeyPadMaxChars = 10;
         }
 
         public async override Task<SubmitStepResponse> SubmitStep(string entry)

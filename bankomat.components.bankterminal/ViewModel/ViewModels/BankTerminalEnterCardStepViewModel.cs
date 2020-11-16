@@ -12,6 +12,7 @@ namespace bankomat.components.bankterminal
             Title = "Enter Card";
             Content = "";
             KeyPadMode = KeyPadMode.Password;
+            KeyPadMaxChars = 10;
             TimeOut = 10;
             TimeOutStep = BankTerminalStep.ExitStepId;
         }

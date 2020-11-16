@@ -3,7 +3,7 @@
 <div class="bank-terminal">
     <div class="bank-terminal-view">    
         <TerminalScreen @ref="terminalScreen" Title="@bankTerminalStepViewModel.Title" Content="@bankTerminalStepViewModel.Content"></TerminalScreen>
-        <KeyPad @ref="keyPad" KeyPadMode="@bankTerminalStepViewModel.KeyPadMode" OnKeyPadEntry="OnKeyPadEntry"></KeyPad>
+        <KeyPad @ref="keyPad" KeyPadMode="@bankTerminalStepViewModel.KeyPadMode" OnKeyPadEntry="OnKeyPadEntry" KeyPadMaxChars="@bankTerminalStepViewModel.KeyPadMaxChars"></KeyPad>
         <Alert @ref="alert" />
     </div>
 </div>

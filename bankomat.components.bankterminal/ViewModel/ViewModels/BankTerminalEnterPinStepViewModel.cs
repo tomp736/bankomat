@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using bankomat.components.keypad;
 
@@ -12,6 +13,7 @@ namespace bankomat.components.bankterminal
             Title = "Enter Pin";
             Content = "";
             KeyPadMode = KeyPadMode.Password;
+            KeyPadMaxChars = 4;
             TimeOut = 10;
             TimeOutStep = BankTerminalStep.ExitStepId;
         }
@@ -28,28 +30,13 @@ namespace bankomat.components.bankterminal
             else
             {
                 response.IsValid = false;
-                response.ErrorMessage = $"Invalid Pin. { maxAttempt - attempt } Tries Remaining";
-
-                if(attempt >= maxAttempt)
+                response.ErrorMessage = submitPinResponse.message;
+                if(submitPinResponse.nextStepId != Guid.Empty)
                 {
-                    response.IsValid = false;
                     response.NextStep = BankTerminalStep.ExitStepId;
                 }
             }
             return await Task.FromResult(response);
-        }
-
-        public int attempt = 0;
-        public int maxAttempt = 3;
-
-        public bool PinValid(string pinNumber)
-        {
-            if(pinNumber == "1234")
-            {
-                return true;
-            }
-            attempt++;
-            return false;
         }
     }
 }

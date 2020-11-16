@@ -12,6 +12,7 @@ namespace bankomat.components.bankterminal
             Title = "Would you like to perform another transaction?";
             Content = "";
             KeyPadMode = KeyPadMode.YesNo;
+            KeyPadMaxChars = 10;
             TimeOut = 10;
             TimeOutStep = BankTerminalStep.ExitStepId;
         }

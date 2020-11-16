@@ -19,7 +19,10 @@ namespace bankomat.components.bankterminal
         public Guid StepId { get; init; }
         public string Title { get; init; }
         public string Content { get; init; }
-        public KeyPadMode KeyPadMode { get; init;}
+        
+        public KeyPadMode KeyPadMode { get; init; }
+        public int KeyPadMaxChars { get; init; }
+
         public int TimeOut { get; init;}
         public Guid TimeOutStep { get; init; }
         

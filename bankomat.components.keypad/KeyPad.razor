@@ -5,19 +5,19 @@
         <td colspan="3">
             @if(KeyPadMode == KeyPadMode.YesNo)
             {
-                <input type="text" disabled>
+                <input type="text" maxlength="@KeyPadMaxChars" disabled>
             }
             else if(KeyPadMode == KeyPadMode.Amount)
             {
-                <input type="number" @bind="KeyPadValue" disabled>
+                <input type="number" @bind="KeyPadValue" maxlength="@KeyPadMaxChars" disabled>
             }
             else if(KeyPadMode == KeyPadMode.Text)
             {
-                <input type="text" @bind="KeyPadValue" disabled>
+                <input type="text" @bind="KeyPadValue" maxlength="@KeyPadMaxChars" disabled>
             }
             else if(KeyPadMode == KeyPadMode.Password)
             {
-                <input type="password" @bind="KeyPadValue" disabled>
+                <input type="password" @bind="KeyPadValue" maxlength="@KeyPadMaxChars" disabled>
             }
         </td>
 
@@ -84,13 +84,15 @@
     public EventCallback<KeyPadEntry> OnKeyPadEntry { get; set; }
     [Parameter]
     public KeyPadMode KeyPadMode { get; set; }
+    [Parameter]
+    public int KeyPadMaxChars { get; set; }
 
     public async Task OnButtonClick(KeyPadEntry keyPadEntry)
     {
         if(KeyPadMode == KeyPadMode.YesNo)
         {
         }
-        else if(keyPadEntry.IsNumber())
+        else if(keyPadEntry.IsNumber() && KeyPadValue.Length < KeyPadMaxChars)
         {
             string tempValue = KeyPadValue;
             tempValue += (int)keyPadEntry;
