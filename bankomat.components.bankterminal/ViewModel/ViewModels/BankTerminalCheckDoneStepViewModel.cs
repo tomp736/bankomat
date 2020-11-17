@@ -17,17 +17,20 @@ namespace bankomat.components.bankterminal
             TimeOutStep = BankTerminalStep.ExitStepId;
         }
 
-        public override async Task OnKeyPadEntry(KeyPadEntry keyPadEntry)
+        public override async Task<KeyPadEntryResponse> OnKeyPadEntry(KeyPadEntry keyPadEntry)
         {
-            if(keyPadEntry.IsBack())
+            bool isValid = false;
+            if(keyPadEntry.IsNo())
             {
+                isValid = true;
                 IsDone = false;
             }
-            else if(keyPadEntry.IsNext())
+            else if(keyPadEntry.IsYes())
             {
+                isValid = true;
                 IsDone = true;
             }
-            await Task.CompletedTask;
+            return await Task.FromResult(new KeyPadEntryResponse() { IsValid = isValid });
         }
 
         public bool? IsDone { get; set; }

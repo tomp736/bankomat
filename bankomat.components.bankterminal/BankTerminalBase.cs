@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using bankomat.components;
 using bankomat.components.keypad;
 using bankomat.components.terminalscreen;
+using System.Threading;
 
 namespace bankomat.components.bankterminal
 {
@@ -32,19 +33,47 @@ namespace bankomat.components.bankterminal
         {
             await bankTerminalService.StartTerminalSession();
             await GoToStep(BankTerminalStep.WelcomeStepId);
+            timer = Timer();
             await base.OnInitializedAsync();
         }
 
         public virtual async Task OnKeyPadEntry(KeyPadEntry keyPadEntry)
         {
-            var result = bankTerminalStepViewModel.OnKeyPadEntry(keyPadEntry);
-            if((keyPadEntry == KeyPadEntry.Left && keyPad.KeyPadValue == string.Empty)
-                || keyPadEntry == KeyPadEntry.Right)
+            var result = await bankTerminalStepViewModel.OnKeyPadEntry(keyPadEntry);
+            if(result.IsValid)
             {
-                await ProcessStep();
-            }
-            await OnUserActivity();
-            await Task.CompletedTask;
+                if(keyPadEntry.IsCancel())
+                {
+                    await ProcessCancel();
+                    return;
+                }
+                
+                // update timeout on number press
+                if(keyPadEntry.IsNumber())
+                {
+                    UpdateTimeout();
+                }
+
+                // process step if next pressed
+                if(keyPadEntry.IsYes())
+                {
+                    await ProcessStep();
+                }
+
+                // process step if back pressed when YesNoCancel
+                if(keyPad.KeyPadMode == KeyPadMode.YesNoCancel || 
+                    keyPad.KeyPadMode == KeyPadMode.YesNo && 
+                    keyPadEntry.IsNo())
+                {
+                    await ProcessStep();
+                }
+                    
+            }            
+        }
+
+        public async Task ProcessCancel()
+        {
+            await GoToStep(BankTerminalStep.ExitStepId);
         }
 
         public async Task ProcessStep()
@@ -55,11 +84,17 @@ namespace bankomat.components.bankterminal
             if (validateResponse.IsValid)
             {
                 loggerService.WriteConsole("SubmitStep");
-                SubmitStepResponse submitStepResponse = await SubmitStep();
-                if(submitStepResponse.IsValid)
+                SubmitStepResponse submitStepResponse = await SubmitStep();                
+                
+                if(submitStepResponse.NextStep != Guid.Empty)
                 {
+                    alert.Clear();
                     loggerService.WriteConsole("GoToStep");
                     await GoToStep(submitStepResponse.NextStep);
+                }
+                else
+                {
+                    alert.ShowAlert(AlertType.Warning, submitStepResponse.ErrorMessage);
                 }
             }          
         }
@@ -67,12 +102,28 @@ namespace bankomat.components.bankterminal
         public virtual async Task<ValidateStepResponse> ValidateStep()
         {
             var result = await bankTerminalStepViewModel.ValidateStep(keyPad.KeyPadValue);
+            // if(result.IsValid)
+            // {
+            //     alert.Clear();
+            // }
+            // else
+            // {
+            //     alert.ShowAlert(AlertType.Warning, result.ErrorMessage);
+            // }
             return await Task.FromResult(result);
         }
 
         public virtual async Task<SubmitStepResponse> SubmitStep()
         {
             var result = await bankTerminalStepViewModel.SubmitStep(keyPad.KeyPadValue);
+            // if(result.IsValid)
+            // {
+            //     alert.Clear();
+            // }
+            // else
+            // {
+            //     alert.ShowAlert(AlertType.Warning, result.ErrorMessage);
+            // }
             return await Task.FromResult(result);
         }
         
@@ -80,7 +131,7 @@ namespace bankomat.components.bankterminal
         {
             if(stepId != Guid.Empty)
             {        
-                bankTerminalStepViewModel = bankTerminalStepViewModelFactory.CreateViewModel(stepId);                
+                bankTerminalStepViewModel = bankTerminalStepViewModelFactory.CreateViewModel(stepId);
                 if(bankTerminalStepViewModel != null)
                 {
                     if(keyPad != null)
@@ -89,33 +140,36 @@ namespace bankomat.components.bankterminal
                     }
                 }
                 ValidationResponse = null;
-            }
-            await OnUserActivity();
+            }    
+            UpdateTimeout();            
             StateHasChanged();
             await Task.CompletedTask;
         }
 
-        private Task timer = null;
-        protected TimeSpan timeLeft = new TimeSpan(0,0,0);
-        public async Task OnUserActivity()
-        {
-            timeLeft = new TimeSpan(0,0,bankTerminalStepViewModel.TimeOut);
-            if(timer == null || timer.IsCompleted)
-            {
-                timer = Task.Run(Timer);
-                await timer;
-            }
+        private Task timer;
+        protected TimeSpan timeoutTimeSpan = new TimeSpan(0,0,0);
+        public void UpdateTimeout()
+        {      
+            timeoutTimeSpan = new TimeSpan(0,0,bankTerminalStepViewModel.TimeOut);
         }
         public async Task Timer()
         {
-            while(timeLeft > new TimeSpan())
+            StateHasChanged();
+            // while(timeoutTimeSpan > new TimeSpan())
+            while(true)
             {
                 await Task.Delay(1000);
-                timeLeft = timeLeft.Subtract(new TimeSpan(0,0,1));
-                StateHasChanged();
+                if(timeoutTimeSpan.Seconds > 0)
+                {
+                    timeoutTimeSpan = timeoutTimeSpan.Subtract(new TimeSpan(0,0,1));
+                    StateHasChanged();
+                }
+                if(timeoutTimeSpan.Seconds == 0)
+                {
+                    await bankTerminalStepViewModel.OnTimeout(bankTerminalService);
+                    await GoToStep(bankTerminalStepViewModel.TimeOutStep);
+                }
             }
-            await bankTerminalStepViewModel.OnTimeout(bankTerminalService);
-            await GoToStep(bankTerminalStepViewModel.TimeOutStep);
         }
     }
 }

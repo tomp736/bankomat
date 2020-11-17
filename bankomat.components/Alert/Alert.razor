@@ -20,4 +20,12 @@
         Message = message;
         StateHasChanged();
     }
+
+    public void Clear()
+    {
+        Visible = false;
+        AlertType = AlertType.Primary;
+        Message = string.Empty;
+        StateHasChanged();
+    }
 } 

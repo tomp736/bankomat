@@ -1,6 +1,6 @@
 @inject ILoggerService loggerService;
 
-<button type="button" @onclick="(e => ItemClick(KeyPadEntry))">
+<button type="button" @onclick="(e => ItemClick(KeyPadEntry))" disabled="@Disabled">
     @ChildContent
 </button>
 
@@ -14,6 +14,9 @@
 
     [Parameter]
     public EventCallback<KeyPadEntry> OnButtonClick { get; set; }
+
+    [Parameter]
+    public bool Disabled { get; set; }
 
     public async Task ItemClick(KeyPadEntry keyPadEntry)
     {

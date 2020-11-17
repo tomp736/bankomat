@@ -12,11 +12,16 @@ namespace bankomat.components.bankterminal
             StepId = BankTerminalStep.CheckDoneStepId;
             Title = "Goodbye";
             Content = "";
-            KeyPadMode = KeyPadMode.YesNo;
+            KeyPadMode = KeyPadMode.Disabled;
             KeyPadMaxChars = 10;
             TimeOut = 3;
             TimeOutStep = BankTerminalStep.WelcomeStepId;
         }   
+
+        public override async Task<KeyPadEntryResponse> OnKeyPadEntry(KeyPadEntry keyPadEntry)
+        {
+            return await Task.FromResult(new KeyPadEntryResponse() { IsValid = false });
+        }
 
         public async override Task<SubmitStepResponse> SubmitStep(string entry)
         {

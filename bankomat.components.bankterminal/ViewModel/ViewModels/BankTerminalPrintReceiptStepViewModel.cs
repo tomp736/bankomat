@@ -18,17 +18,20 @@ namespace bankomat.components.bankterminal
         }
         private bool? PrintReceiptSelection { get; set; }
 
-        public override async Task OnKeyPadEntry(KeyPadEntry keyPadEntry)
+        public override async Task<KeyPadEntryResponse> OnKeyPadEntry(KeyPadEntry keyPadEntry)
         {
-            if(keyPadEntry.IsBack())
+            bool isValid = false;
+            if(keyPadEntry.IsNo())
             {
+                isValid = true;
                 PrintReceiptSelection = false;
             }
-            else if(keyPadEntry.IsNext())
+            else if(keyPadEntry.IsYes())
             {
+                isValid = true;
                 PrintReceiptSelection = true;
             }
-            await Task.CompletedTask;
+            return await Task.FromResult(new KeyPadEntryResponse() { IsValid = isValid });
         }
 
         public async override Task<SubmitStepResponse> SubmitStep(string entry)

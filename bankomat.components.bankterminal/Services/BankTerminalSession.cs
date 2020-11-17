@@ -7,6 +7,7 @@ namespace bankomat.components.bankterminal
     public class BankTerminalSession : IBankTerminalSession
     {
         public Guid SessionId { get; set; }
+        public int PinAttempts { get; set; }
 
         public bool Start()
         {
@@ -17,6 +18,7 @@ namespace bankomat.components.bankterminal
         public bool End()
         {
             SessionId = Guid.Empty;
+            PinAttempts = 0;
             return true;
         }
     }

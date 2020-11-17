@@ -45,14 +45,31 @@ namespace bankomat.components.bankterminal
         #region Card
 
         public async Task<(bool, string, Guid)> SubmitCard(string card)
-        {            
-            return await Task.FromResult((true,"", Guid.Empty));
+        {        
+            bool valid = true;
+            string message = "";
+            Guid nextStep = Guid.Empty;
+
+            if(!CardValid(card))
+            { 
+                message = $"Card Invalid.";
+                valid = false;
+            }
+            return await Task.FromResult((valid, message, nextStep));
+        }
+
+        public bool CardValid(string cardNumber)
+        {
+            if(cardNumber == "1111")
+            {
+                return true;
+            }
+            return false;
         }
 
         #endregion
 
         #region Pin
-        public int attempt = 0;
         public int maxAttempt = 3;
         public async Task<(bool, string, Guid)> SubmitPin(string pin)
         {
@@ -66,15 +83,15 @@ namespace bankomat.components.bankterminal
             else
             {
                 valid = false;
-                if(attempt >= maxAttempt)
+                _bankTerminalSession.PinAttempts++;
+                if(_bankTerminalSession.PinAttempts >= maxAttempt)
                 {
-                    message = $"Invalid Pin. {maxAttempt - attempt} Tries Remaining";
                     nextStep = BankTerminalStep.ExitStepId;
-                }  
+                }        
                 else
                 {
-
-                }                              
+                    message = $"Invalid Pin. {maxAttempt - _bankTerminalSession.PinAttempts} Tries Remaining";
+                }                      
             }
             return await Task.FromResult((valid, message, nextStep));
         }
@@ -85,7 +102,6 @@ namespace bankomat.components.bankterminal
             {
                 return true;
             }
-            attempt++;
             return false;
         }
 

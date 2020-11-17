@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using bankomat.components.keypad;
 
 namespace bankomat.components.bankterminal
 {

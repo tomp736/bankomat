@@ -30,10 +30,10 @@ namespace bankomat.components.bankterminal
         public string AlertMessage { get; set;}
         public AlertType AlertType { get; set;}
         
-        
-        public virtual async Task OnKeyPadEntry(KeyPadEntry keyPadEntry)
+                
+        public virtual async Task<KeyPadEntryResponse> OnKeyPadEntry(KeyPadEntry keyPadEntry)
         {
-            await Task.CompletedTask;
+            return await Task.FromResult(new KeyPadEntryResponse() { IsValid = true });
         }
 
         public virtual async Task<ValidateStepResponse> ValidateStep(string entry)

@@ -20,7 +20,7 @@ namespace bankomat.components.keypad
             }
             return false;
         }
-        public static bool IsBack(this KeyPadEntry keyPadEntry)
+        public static bool IsNo(this KeyPadEntry keyPadEntry)
         {
             if(keyPadEntry == KeyPadEntry.Left)
             {
@@ -28,9 +28,17 @@ namespace bankomat.components.keypad
             }
             return false;
         }
-        public static bool IsNext(this KeyPadEntry keyPadEntry)
+        public static bool IsYes(this KeyPadEntry keyPadEntry)
         {
-            if(keyPadEntry == KeyPadEntry.Right)
+            if(keyPadEntry == KeyPadEntry.Yes)
+            {
+                return true;
+            }
+            return false;
+        }
+        public static bool IsCancel(this KeyPadEntry keyPadEntry)
+        {
+            if(keyPadEntry == KeyPadEntry.Cancel)
             {
                 return true;
             }

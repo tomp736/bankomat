@@ -11,7 +11,7 @@ namespace bankomat.components.bankterminal
         {
             StepId = BankTerminalStep.EnterPinStepId;
             Title = "Enter Pin";
-            Content = "";
+            Content = "(test pin: 1234)";
             KeyPadMode = KeyPadMode.Password;
             KeyPadMaxChars = 4;
             TimeOut = 10;

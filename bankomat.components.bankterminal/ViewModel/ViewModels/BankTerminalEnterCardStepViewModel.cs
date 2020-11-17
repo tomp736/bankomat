@@ -10,13 +10,13 @@ namespace bankomat.components.bankterminal
         {
             StepId = BankTerminalStep.EnterCardStepId;
             Title = "Enter Card";
-            Content = "";
+            Content = "(test card: 1111)";
             KeyPadMode = KeyPadMode.Password;
             KeyPadMaxChars = 10;
             TimeOut = 10;
             TimeOutStep = BankTerminalStep.ExitStepId;
         }
-        
+
         public async override Task<SubmitStepResponse> SubmitStep(string entry)
         {
             SubmitStepResponse response = new SubmitStepResponse();

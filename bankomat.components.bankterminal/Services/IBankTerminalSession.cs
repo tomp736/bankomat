@@ -7,6 +7,7 @@ namespace bankomat.components.bankterminal
     {
         Guid SessionId { get; set; }
         bool Start();
+        int PinAttempts {get; set;}
         bool End();
     }
 }

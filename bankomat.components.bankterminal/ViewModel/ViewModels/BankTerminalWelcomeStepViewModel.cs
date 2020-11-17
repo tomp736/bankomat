@@ -11,8 +11,18 @@ namespace bankomat.components.bankterminal
             StepId = BankTerminalStep.WelcomeStepId;
             Title = "Welcome";
             Content = "Press right arrow to continue";
-            KeyPadMode = KeyPadMode.YesNo;    
+            KeyPadMode = KeyPadMode.Yes;    
             KeyPadMaxChars = 10;
+        }
+
+        public override async Task<KeyPadEntryResponse> OnKeyPadEntry(KeyPadEntry keyPadEntry)
+        {
+            bool isValid = false;
+            if(keyPadEntry.IsYes())
+            {
+                isValid = true;
+            }
+            return await Task.FromResult(new KeyPadEntryResponse() { IsValid = isValid });
         }
 
         public async override Task<SubmitStepResponse> SubmitStep(string entry)

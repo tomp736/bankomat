@@ -2,8 +2,9 @@ namespace bankomat.components.keypad
 {
     public enum KeyPadEntry
     {
+        Cancel = -3,
         Left = -2,
-        Right = -1,
+        Yes = -1,
         Zero  = 0,
         One = 1,
         Two = 2,
