@@ -1,1 +1,1 @@
-# bankomat
+# blazor bank terminal
